@@ -1,0 +1,64 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FivPay | Welcome</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body class="auth-body">
+  <button class="theme-button" id="themeButton">◐ Theme</button>
+
+  <main class="auth-layout">
+    <section class="auth-story">
+      <a class="brand" href="/"> <span class="brand-icon">F</span> FivPay</a>
+      <div class="story-content">
+        <span class="eyebrow">YOUR MONEY, YOUR WAY</span>
+        <h1>Payments made<br><span>simple.</span></h1>
+        <p>A clean, secure-minded space to explore digital payments and manage your demo account.</p>
+        <div class="story-points">
+          <p>✓ &nbsp; Easy payment dashboard</p>
+          <p>✓ &nbsp; QR and account number demo</p>
+          <p>✓ &nbsp; Activity tracking in one place</p>
+        </div>
+      </div>
+      <small class="auth-footer">FivPay Portfolio Project · Demo Only</small>
+    </section>
+
+    <section class="auth-form-wrap">
+      <div class="auth-form">
+        <div class="mobile-brand brand"><span class="brand-icon">F</span> FivPay</div>
+        <span class="eyebrow" id="formEyebrow">WELCOME BACK</span>
+        <h2 id="formTitle">Sign in to FivPay</h2>
+        <p class="muted" id="formSubtitle">Enter your details to access your dashboard.</p>
+
+        <form id="authForm">
+          <div id="nameField" class="hidden">
+            <label for="name">Full name</label>
+            <input id="name" name="name" autocomplete="name" placeholder="Your full name">
+          </div>
+          <label for="email">Email address</label>
+          <input id="email" name="email" type="email" autocomplete="email"
+                 placeholder="you@example.com" required>
+          <label for="password">Password</label>
+          <div class="password-wrap">
+            <input id="password" name="password" type="password"
+                   autocomplete="current-password" minlength="8"
+                   placeholder="At least 8 characters" required>
+            <button type="button" id="togglePassword">Show</button>
+          </div>
+          <p id="authMessage" class="message" role="status"></p>
+          <button class="primary-button full-button" id="authSubmit">Sign in →</button>
+        </form>
+
+        <p class="switch-auth"><span id="switchText">New to FivPay?</span>
+          <button type="button" id="switchMode">Create account</button>
+        </p>
+        <p class="legal-note">Demo project. Do not use real banking passwords or sensitive financial information.</p>
+      </div>
+    </section>
+  </main>
+  <script src="/static/js/app.js"></script>
+</body>
+</html>

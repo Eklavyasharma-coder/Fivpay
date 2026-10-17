@@ -1,0 +1,145 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FivPay | Dashboard</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://unpkg.com/html5-qrcode"></script>
+</head>
+<body>
+  <div class="dashboard-layout">
+    <aside class="sidebar" id="sidebar">
+      <a href="/dashboard" class="brand"><span class="brand-icon">F</span> FivPay</a>
+      <p class="side-heading">WORKSPACE</p>
+      <button class="side-link active" data-section="overview">▦ &nbsp; Overview</button>
+      <button class="side-link" data-section="payments">⇄ &nbsp; Pay someone</button>
+      <button class="side-link" data-section="qr">▦ &nbsp; QR payments</button>
+      <button class="side-link" data-section="activity">↗ &nbsp; Transactions</button>
+      <button class="side-link" data-section="profile">⚙ &nbsp; My profile</button>
+      <div class="sidebar-bottom">
+        <div class="support-card"><strong>Need help?</strong><p>Questions about this demo?</p><a href="mailto:support@example.com">Contact support →</a></div>
+        <button id="logoutButton" class="side-link logout">↪ &nbsp; Sign out</button>
+      </div>
+    </aside>
+
+    <main class="workspace">
+      <header class="topbar">
+        <button id="menuButton" class="menu-button">☰</button>
+        <div><span class="muted">Workspace /</span> <strong id="pageBreadcrumb">Overview</strong></div>
+        <div class="topbar-right">
+          <button class="theme-button" id="themeButton">◐ Theme</button>
+          <span class="avatar" id="topAvatar">U</span>
+        </div>
+      </header>
+
+      <div class="page-content">
+        <section class="content-section visible" id="overviewSection">
+          <div class="page-heading">
+            <div><span class="eyebrow">YOUR FINANCIAL SPACE</span>
+              <h1>Welcome, <span id="welcomeName">there</span> 👋</h1>
+              <p class="muted">Here is your demo account overview.</p>
+            </div>
+            <button class="primary-button" data-go="payments">＋ Make a payment</button>
+          </div>
+
+          <div class="stats">
+            <article class="stat-card balance-card"><span>Available demo balance</span>
+              <h2 id="balanceValue">₹10,000.00</h2><small>Simulated balance · Not real money</small>
+            </article>
+            <article class="stat-card"><span>Today's payments</span><h2 id="todayCount">0</h2>
+              <small>Transactions recorded today</small>
+            </article>
+            <article class="stat-card"><span>Account number</span><h2 class="account-display" id="accountValue">—</h2>
+              <button class="inline-button" id="copyAccount">Copy account number</button>
+            </article>
+          </div>
+
+          <div class="two-column">
+            <article class="surface">
+              <div class="surface-heading"><div><h3>Quick actions</h3><p class="muted">What would you like to do?</p></div></div>
+              <div class="action-grid">
+                <button class="action-tile" data-go="payments"><span class="action-icon">↗</span><strong>Send money</strong><small>Account number</small></button>
+                <button class="action-tile" data-go="qr"><span class="action-icon green">▦</span><strong>QR payments</strong><small>Scan or create QR</small></button>
+                <button class="action-tile" data-go="activity"><span class="action-icon purple">▤</span><strong>History</strong><small>See transactions</small></button>
+                <button class="action-tile" data-go="profile"><span class="action-icon orange">⚙</span><strong>My profile</strong><small>Edit your name</small></button>
+              </div>
+            </article>
+            <article class="surface">
+              <div class="surface-heading"><div><h3>Account details</h3><p class="muted">Share these details only for this demo.</p></div></div>
+              <div class="detail-row"><span>Account holder</span><strong id="accountName">—</strong></div>
+              <div class="detail-row"><span>Account number</span><strong id="accountShort">—</strong></div>
+              <div class="detail-row"><span>Payment network</span><strong>FivPay Demo</strong></div>
+              <div class="detail-row"><span>Daily demo limit</span><strong>₹1,00,000</strong></div>
+            </article>
+          </div>
+
+          <article class="surface">
+            <div class="surface-heading"><div><h3>Recent transactions</h3><p class="muted">Your latest activity</p></div><button class="inline-button" data-go="activity">View all →</button></div>
+            <div class="table-wrap"><table><thead><tr><th>DETAILS</th><th>DATE</th><th>STATUS</th><th class="amount-cell">AMOUNT</th></tr></thead><tbody id="recentRows"></tbody></table></div>
+          </article>
+        </section>
+
+        <section class="content-section" id="paymentsSection">
+          <div class="page-heading"><div><span class="eyebrow">DEMO TRANSFERS</span><h1>Pay someone</h1><p class="muted">Transfer demo balance to another registered FivPay account.</p></div></div>
+          <div class="surface form-surface">
+            <h3>Payment details</h3>
+            <form id="payForm">
+              <label for="payAccount">Recipient FivPay account number</label>
+              <input id="payAccount" placeholder="Example: FPABC123..." required>
+              <label for="payAmount">Amount (₹)</label>
+              <input id="payAmount" type="number" min="1" max="100000" step="0.01" placeholder="500.00" required>
+              <label for="payNote">Payment note (optional)</label>
+              <input id="payNote" maxlength="100" placeholder="What is this payment for?">
+              <p class="message" id="payMessage" role="status"></p>
+              <button class="primary-button">Review and make demo payment</button>
+            </form>
+            <p class="legal-note">No real bank or UPI transfer is performed.</p>
+          </div>
+        </section>
+
+        <section class="content-section" id="qrSection">
+          <div class="page-heading"><div><span class="eyebrow">SCAN & SHARE</span><h1>QR payments</h1><p class="muted">Create your FivPay demo QR or scan a compatible QR.</p></div></div>
+          <div class="two-column">
+            <article class="surface">
+              <h3>Your payment QR</h3><p class="muted">Other demo users can scan this to get your account number.</p>
+              <div id="qrOutput" class="qr-output"></div><button id="makeQr" class="primary-button">Generate my QR</button>
+            </article>
+            <article class="surface">
+              <h3>Scan a payment QR</h3><p class="muted">Allow camera access when your browser asks.</p>
+              <div id="qrReader"></div><button id="startScanner" class="primary-button">Start camera scanner</button>
+              <button id="stopScanner" class="secondary-button">Stop scanner</button>
+              <p id="scanMessage" class="message" role="status"></p>
+              <p class="legal-note">Only use trusted QR codes. Check the account number and amount before paying.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="content-section" id="activitySection">
+          <div class="page-heading"><div><span class="eyebrow">YOUR ACTIVITY</span><h1>Transactions</h1><p class="muted">Payments sent and received by your demo account.</p></div></div>
+          <article class="surface"><div class="table-wrap"><table><thead><tr><th>DETAILS</th><th>DATE</th><th>TYPE</th><th class="amount-cell">AMOUNT</th></tr></thead><tbody id="allRows"></tbody></table></div></article>
+        </section>
+
+        <section class="content-section" id="profileSection">
+          <div class="page-heading"><div><span class="eyebrow">PERSONAL SETTINGS</span><h1>My profile</h1><p class="muted">Update your display name and view your account details.</p></div></div>
+          <article class="surface form-surface">
+            <div class="profile-avatar" id="profileAvatar">U</div>
+            <form id="profileForm"><label for="profileName">Display name</label><input id="profileName" minlength="2" maxlength="60" required>
+              <label for="profileEmail">Email address</label><input id="profileEmail" type="email" disabled>
+              <label for="profileAccount">FivPay account number</label><input id="profileAccount" disabled>
+              <p id="profileMessage" class="message" role="status"></p>
+              <button class="primary-button">Save profile</button>
+            </form>
+          </article>
+        </section>
+
+        <footer>FivPay © 2026 · Student portfolio demo · No real payments</footer>
+      </div>
+    </main>
+  </div>
+  <div id="toast" class="toast" role="status"></div>
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
