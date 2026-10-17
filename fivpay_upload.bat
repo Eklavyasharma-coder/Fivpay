@@ -53,7 +53,7 @@ if not errorlevel 1 (
 REM Create timestamped commit
 for /f %%T in ('powershell -NoProfile -Command "Get-Date -Format yyyy-MM-dd_HH-mm-ss"') do set "STAMP=%%T"
 
-git commit -m "Fivpay update %STAMP%"
+git commit -m "Fivpay file code  %STAMP%"
 if errorlevel 1 goto error
 
 echo.
