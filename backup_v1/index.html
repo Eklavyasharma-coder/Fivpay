@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FivPay - Modern Fintech Ecosystem</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+  <!-- Toast Alert Notifications Root -->
+  <div id="toast-container"></div>
+
+  <div class="app-container">
+    <!-- ====================================================================
+         1. SIDEBAR NAVIGATION
+         ==================================================================== -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="#" class="brand-logo">
+          <div class="brand-icon">5</div>
+          <span>FivPay</span>
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Portals & Workspaces</div>
+        
+        <a href="#user-dashboard" class="nav-link active" data-view="user-dashboard">
+          <span class="nav-icon">📊</span>
+          <span>User Dashboard</span>
+        </a>
+
+        <a href="#staff-workspace" class="nav-link" data-view="staff-workspace">
+          <span class="nav-icon">🛡️</span>
+          <span>Staff Workspace</span>
+          <span class="nav-badge badge-warning">4 Queue</span>
+        </a>
+
+        <a href="#admin-dashboard" class="nav-link" data-view="admin-dashboard">
+          <span class="nav-icon">⚡</span>
+          <span>Admin Dashboard</span>
+        </a>
+
+        <div class="nav-section-title">Financial Tools</div>
+
+        <a href="#transactions-budgets" class="nav-link" data-view="transactions-budgets">
+          <span class="nav-icon">💳</span>
+          <span>Transactions & Budgets</span>
+        </a>
+
+        <a href="#analytics" class="nav-link" data-view="analytics">
+          <span class="nav-icon">📈</span>
+          <span>Charts & Analytics</span>
+        </a>
+
+        <div class="nav-section-title">Actions & Quick Pay</div>
+
+        <a href="#" class="nav-link" onclick="window.app.openModal('modal-send-money')">
+          <span class="nav-icon">💸</span>
+          <span>Send Money</span>
+        </a>
+
+        <a href="#" class="nav-link" onclick="window.app.openModal('modal-request-qr')">
+          <span class="nav-icon">📱</span>
+          <span>Generate QR Code</span>
+        </a>
+
+        <a href="#" class="nav-link" onclick="window.app.openModal('modal-qr-scanner')">
+          <span class="nav-icon">📷</span>
+          <span>Scan QR Code</span>
+        </a>
+      </nav>
+
+      <!-- Sidebar Bottom User Profile -->
+      <div class="sidebar-footer">
+        <div class="user-profile-summary">
+          <div class="user-avatar" id="sidebar-user-avatar">AM</div>
+          <div class="user-info">
+            <div class="user-name" id="sidebar-user-name">Alex Mercer</div>
+            <div class="user-role-label" id="sidebar-user-role">Platinum Tier</div>
+          </div>
+          <button class="btn btn-ghost btn-icon sm" title="Sign Out" onclick="window.authManager.logout()">
+            🚪
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ====================================================================
+         2. MAIN WRAPPER & TOP NAVIGATION BAR
+         ==================================================================== -->
+    <div class="main-wrapper">
+      <header class="top-navbar">
+        <div class="navbar-left">
+          <button class="menu-toggle-btn" id="mobile-menu-toggle">☰</button>
+          
+          <!-- Role Switcher Pills -->
+          <div class="role-switcher-banner" title="Instant Role Preview">
+            <button class="role-pill active" data-role="user">👤 User</button>
+            <button class="role-pill" data-role="staff">🛡️ Staff</button>
+            <button class="role-pill" data-role="admin">⚡ Admin</button>
+          </div>
+        </div>
+
+        <div class="navbar-right">
+          <!-- Light / Dark Theme Switcher Button -->
+          <button class="btn btn-secondary btn-icon" id="btn-toggle-theme" title="Toggle Light/Dark Theme">
+            <span id="theme-toggle-icon">☀️</span>
+          </button>
+
+          <!-- Quick Actions Button Group -->
+          <button class="btn btn-primary btn-sm" onclick="window.app.openModal('modal-send-money')">
+            💸 Send Money
+          </button>
+
+          <a href="auth.html" class="btn btn-secondary btn-sm" title="Go to Auth Page">
+            🔑 Switch Account
+          </a>
+        </div>
+      </header>
+
+      <!-- ====================================================================
+           3. PAGE CONTENT SECTIONS
+           ==================================================================== -->
+      <main class="page-content">
+
+        <!-- VIEW A: USER DASHBOARD -->
+        <section id="view-user-dashboard" class="view-section active">
+          <!-- Balance Hero Card -->
+          <div class="balance-hero">
+            <div>
+              <div class="balance-label">
+                <span>Total Net Worth (Live FivPay Rails)</span>
+                <button class="btn btn-ghost btn-icon sm" id="btn-toggle-balance" title="Hide/Show Balance">
+                  👁️
+                </button>
+              </div>
+
+              <div class="balance-amount-row">
+                <div class="balance-number" id="user-balance-amount">$24,850.75</div>
+                <select class="currency-selector" id="user-currency-select" onchange="window.app.showToast('Currency view changed to ' + this.value, 'info')">
+                  <option value="USD">USD ($)</option>
+                  <option value="EUR">EUR (€)</option>
+                  <option value="GBP">GBP (£)</option>
+                </select>
+              </div>
+
+              <div class="quick-actions-bar">
+                <button class="btn btn-primary btn-sm" onclick="window.app.openModal('modal-send-money')">
+                  💸 Send Money
+                </button>
+                <button class="btn btn-secondary btn-sm" onclick="window.app.openModal('modal-request-qr')">
+                  📥 Receive / QR
+                </button>
+                <button class="btn btn-secondary btn-sm" id="btn-action-scan">
+                  📷 Scan QR
+                </button>
+                <button class="btn btn-secondary btn-sm" onclick="window.app.openModal('modal-top-up')">
+                  ➕ Top Up
+                </button>
+              </div>
+            </div>
+
+            <!-- Virtual Cards Container -->
+            <div id="virtual-cards-container" style="display: flex; gap: 1rem; flex-wrap: wrap;"></div>
+          </div>
+
+          <!-- 3-Column Metrics Grid -->
+          <div class="grid-3" style="margin-bottom: 1.75rem;">
+            <div class="card stat-card">
+              <div class="flex items-center justify-between">
+                <div class="stat-icon success">↗️</div>
+                <span class="stat-trend up">+14.2% vs last mo.</span>
+              </div>
+              <div class="stat-value text-success">$9,200.00</div>
+              <div class="text-secondary" style="font-size: 0.85rem;">Monthly Total Inflow</div>
+            </div>
+
+            <div class="card stat-card">
+              <div class="flex items-center justify-between">
+                <div class="stat-icon danger">↘️</div>
+                <span class="stat-trend down">-4.8% vs last mo.</span>
+              </div>
+              <div class="stat-value text-primary">$5,620.00</div>
+              <div class="text-secondary" style="font-size: 0.85rem;">Monthly Total Outflow</div>
+            </div>
+
+            <div class="card stat-card">
+              <div class="flex items-center justify-between">
+                <div class="stat-icon cyan">🛡️</div>
+                <span class="badge badge-success"><span class="badge-dot"></span> Active</span>
+              </div>
+              <div class="stat-value text-accent">99.9% Safe</div>
+              <div class="text-secondary" style="font-size: 0.85rem;">3D Secure & AML Protection</div>
+            </div>
+          </div>
+
+          <!-- Charts & Recent Activity 2-Column Grid -->
+          <div class="grid-2">
+            <!-- Balance Trend Chart Card -->
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <h3 class="card-title">Balance Growth Trend</h3>
+                  <div class="card-subtitle">Real-time asset appreciation</div>
+                </div>
+                <div class="flex gap-1">
+                  <button class="btn btn-secondary btn-sm" onclick="window.fivpayCharts.renderBalanceTrend('chart-balance-trend', '1W')">1W</button>
+                  <button class="btn btn-primary btn-sm" onclick="window.fivpayCharts.renderBalanceTrend('chart-balance-trend', '1M')">1M</button>
+                  <button class="btn btn-secondary btn-sm" onclick="window.fivpayCharts.renderBalanceTrend('chart-balance-trend', '6M')">6M</button>
+                </div>
+              </div>
+              <div class="chart-wrapper">
+                <canvas id="chart-balance-trend"></canvas>
+              </div>
+            </div>
+
+            <!-- Spending by Category Donut Card -->
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <h3 class="card-title">Monthly Spending Distribution</h3>
+                  <div class="card-subtitle">Categorized expense analysis</div>
+                </div>
+                <button class="btn btn-outline btn-sm" onclick="window.app.switchView('transactions-budgets')">
+                  Manage Budgets →
+                </button>
+              </div>
+              <div class="chart-wrapper">
+                <canvas id="chart-category-donut"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Transactions Table Card -->
+          <div class="card" style="margin-top: 1.75rem;">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">Recent Transactions</h3>
+                <div class="card-subtitle">Last settled payments and receipts</div>
+              </div>
+              <button class="btn btn-secondary btn-sm" onclick="window.app.switchView('transactions-budgets')">
+                View All Transactions →
+              </button>
+            </div>
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Transaction</th>
+                    <th>Category</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="recent-transactions-list"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- VIEW B: STAFF WORKSPACE -->
+        <section id="view-staff-workspace" class="view-section">
+          <div class="page-header">
+            <div>
+              <h1>Staff Compliance & Risk Workspace</h1>
+              <p>Review customer KYC identity submissions, flagged transactions, and AML screenings.</p>
+            </div>
+            <span class="badge badge-warning" style="font-size: 0.85rem; padding: 0.4rem 0.85rem;">
+              Staff Officer: Sarah Jenkins (Tier 3)
+            </span>
+          </div>
+
+          <!-- Metrics Row -->
+          <div class="grid-4" style="margin-bottom: 1.75rem;">
+            <div class="card stat-card">
+              <div class="stat-icon warning">📋</div>
+              <div class="stat-value">4 Cases</div>
+              <div class="text-secondary" style="font-size: 0.85rem;">KYC Pending Review</div>
+            </div>
+            <div class="card stat-card">
+              <div class="stat-icon success">✓</div>
+              <div class="stat-value">18 Approved</div>
+              <div class="text-secondary" style="font-size: 0.85rem;">Processed Today</div>
+            </div>
+            <div class="card stat-card">
+              <div class="stat-icon danger">⚠️</div>
+              <div class="stat-value">1 Flagged</div>
+              <div class="text-secondary" style="font-size: 0.85rem;">High Velocity AML Risk</div>
+            </div>
+            <div class="card stat-card">
+              <div class="stat-icon info">⚡</div>
+              <div class="stat-value">4.2 min</div>
+              <div class="text-secondary" style="font-size: 0.85rem;">Average Approval Time</div>
+            </div>
+          </div>
+
+          <!-- KYC Identity Review Queue -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">Identity Verification Queue (KYC)</h3>
+                <div class="card-subtitle">Biometric passport & National ID compliance inspection</div>
+              </div>
+            </div>
+            <div class="grid-2" id="kyc-queue-container" style="gap: 1.25rem;"></div>
+          </div>
+        </section>
+
+        <!-- VIEW C: ADMIN DASHBOARD -->
+        <section id="view-admin-dashboard" class="view-section">
+          <div class="page-header">
+            <div>
+              <h1>Platform Master Administration</h1>
+              <p>Global infrastructure health, liquidity reserves, user controls, and payment rails.</p>
+            </div>
+            <span class="badge badge-primary" style="font-size: 0.85rem; padding: 0.4rem 0.85rem;">
+              Superadmin: Marcus Vance
+            </span>
+          </div>
+
+          <!-- Admin Stats Grid -->
+          <div class="grid-4" style="margin-bottom: 1.75rem;">
+            <div class="card stat-card">
+              <div class="stat-icon cyan">🌐</div>
+              <div class="stat-value">$42.8M</div>
+              <div class="text-secondary" style="font-size: 0.85rem;">Total Platform Volume</div>
+            </div>
+            <div class="card stat-card">
+              <div class="stat-icon success">👥</div>
+              <div class="stat-value">14,892</div>
+              <div class="text-secondary" style="font-size: 0.85rem;">Registered Users</div>
+            </div>
+            <div class="card stat-card">
+              <div class="stat-icon warning">🏦</div>
+              <div class="stat-value">$180.5M</div>
+              <div class="text-secondary" style="font-size: 0.85rem;">Tier-1 Liquidity Reserve</div>
+            </div>
+            <div class="card stat-card">
+              <div class="stat-icon info">⚡</div>
+              <div class="stat-value">24ms</div>
+              <div class="text-secondary" style="font-size: 0.85rem;">Rail Latency (99.99% Uptime)</div>
+            </div>
+          </div>
+
+          <!-- Admin Feature Flags & User Control Grid -->
+          <div class="grid-2">
+            <!-- Feature Rails Toggle Card -->
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Payment Rails & Feature Flags</h3>
+              </div>
+
+              <div class="feature-switch-row">
+                <div>
+                  <div class="font-semibold">Instant SEPA & Faster Payments Rail</div>
+                  <div class="text-muted" style="font-size: 0.8rem;">Sub-second settlement across Europe & UK</div>
+                </div>
+                <label class="switch">
+                  <input type="checkbox" checked onchange="window.app.handleToggleFeatureFlag('instantSepa')">
+                  <span class="slider"></span>
+                </label>
+              </div>
+
+              <div class="feature-switch-row">
+                <div>
+                  <div class="font-semibold">Crypto Liquidity Bridge</div>
+                  <div class="text-muted" style="font-size: 0.8rem;">Automated USDC / EURC stablecoin settlement</div>
+                </div>
+                <label class="switch">
+                  <input type="checkbox" checked onchange="window.app.handleToggleFeatureFlag('cryptoRailBridge')">
+                  <span class="slider"></span>
+                </label>
+              </div>
+
+              <div class="feature-switch-row">
+                <div>
+                  <div class="font-semibold">Zero-Fee Promotion Toggle</div>
+                  <div class="text-muted" style="font-size: 0.8rem;">Waive all peer-to-peer platform charges</div>
+                </div>
+                <label class="switch">
+                  <input type="checkbox" checked onchange="window.app.handleToggleFeatureFlag('zeroFeePromotion')">
+                  <span class="slider"></span>
+                </label>
+              </div>
+
+              <div class="feature-switch-row">
+                <div>
+                  <div class="font-semibold">International SWIFT Rail</div>
+                  <div class="text-muted" style="font-size: 0.8rem;">Legacy correspondent banking network</div>
+                </div>
+                <label class="switch">
+                  <input type="checkbox" onchange="window.app.handleToggleFeatureFlag('internationalSwift')">
+                  <span class="slider"></span>
+                </label>
+              </div>
+            </div>
+
+            <!-- User Management Table Card -->
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Platform User Accounts</h3>
+                <span class="badge badge-neutral">Live Synced</span>
+              </div>
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Account</th>
+                      <th>Role</th>
+                      <th>Balance</th>
+                      <th>Status</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="admin-users-table"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- VIEW D: TRANSACTIONS & BUDGETS -->
+        <section id="view-transactions-budgets" class="view-section">
+          <div class="page-header">
+            <div>
+              <h1>Transactions & Spending Budgets</h1>
+              <p>Monitor transaction ledger, search history, and track monthly budgeting limits.</p>
+            </div>
+            <div class="flex gap-2">
+              <button class="btn btn-secondary btn-sm" id="btn-export-tx">
+                📥 Export CSV
+              </button>
+              <button class="btn btn-primary btn-sm" onclick="window.app.openModal('modal-add-budget')">
+                ➕ New Budget
+              </button>
+            </div>
+          </div>
+
+          <!-- Budgets Progress Overview Grid -->
+          <div class="card" style="margin-bottom: 1.75rem;">
+            <div class="card-header">
+              <h3 class="card-title">Active Spending Goals & Budgets</h3>
+            </div>
+            <div class="grid-3" id="budgets-grid-container" style="gap: 1.25rem;"></div>
+          </div>
+
+          <!-- Comprehensive Transactions Filter & Table Card -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Transaction Ledger</h3>
+              <div class="flex gap-2" style="flex-wrap: wrap;">
+                <input type="text" id="tx-search-input" class="form-control" style="width: 220px; padding: 0.45rem 0.85rem;" placeholder="🔍 Search description...">
+                <select id="tx-category-filter" class="form-control" style="width: 160px; padding: 0.45rem 0.85rem;">
+                  <option value="all">All Categories</option>
+                  <option value="Income">Income</option>
+                  <option value="Groceries">Groceries</option>
+                  <option value="Travel">Travel</option>
+                  <option value="Cloud Services">Cloud Services</option>
+                  <option value="Electronics">Electronics</option>
+                  <option value="Entertainment">Entertainment</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Transaction</th>
+                    <th>Party</th>
+                    <th>Category</th>
+                    <th>Timestamp</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="full-transactions-table-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- VIEW E: CHARTS & ANALYTICS -->
+        <section id="view-analytics" class="view-section">
+          <div class="page-header">
+            <div>
+              <h1>Financial Analytics & Cash Flow Engine</h1>
+              <p>Deep-dive cash velocity, monthly inflow vs outflow, and expenditure trajectory.</p>
+            </div>
+            <div class="flex gap-2">
+              <button class="btn btn-secondary btn-sm" onclick="window.fivpayCharts.refreshAll()">
+                🔄 Refresh Charts
+              </button>
+            </div>
+          </div>
+
+          <div class="grid-2" style="margin-bottom: 1.75rem;">
+            <!-- Cash Flow Comparison -->
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <h3 class="card-title">Cash Flow: Inflow vs Outflow</h3>
+                  <div class="card-subtitle">Monthly comparison in USD ($)</div>
+                </div>
+              </div>
+              <div class="chart-wrapper">
+                <canvas id="chart-cash-flow"></canvas>
+              </div>
+            </div>
+
+            <!-- Analytics Balance Projection -->
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <h3 class="card-title">Portfolio Trajectory</h3>
+                  <div class="card-subtitle">Historical asset accumulation</div>
+                </div>
+              </div>
+              <div class="chart-wrapper">
+                <canvas id="chart-analytics-trend"></canvas>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- ====================================================================
+       4. MODALS & DIALOGS
+       ==================================================================== -->
+
+  <!-- MODAL 1: SEND MONEY (STEP 1) -->
+  <div class="modal-overlay" id="modal-send-money">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title">💸 Send Money via FivPay</h3>
+        <button class="modal-close" data-close-modal>&times;</button>
+      </div>
+      <form id="form-send-money">
+        <div class="modal-body">
+          <!-- Quick Contacts Selector -->
+          <div style="margin-bottom: 1.25rem;">
+            <div class="form-label" style="margin-bottom: 0.5rem;">Quick Contacts</div>
+            <div class="flex gap-2" style="flex-wrap: wrap;">
+              <button type="button" class="btn btn-secondary btn-sm" onclick="window.paymentsEngine.selectContact('Elena Rostova', 'elena.r@finmail.com')">
+                👤 Elena ($850)
+              </button>
+              <button type="button" class="btn btn-secondary btn-sm" onclick="window.paymentsEngine.selectContact('David Chen', 'chen.d@singaporesinglet.sg')">
+                👤 David Chen
+              </button>
+              <button type="button" class="btn btn-secondary btn-sm" onclick="window.paymentsEngine.selectContact('Sarah Jenkins', 'sarah.compliance@fivpay.com')">
+                🛡️ Sarah (Staff)
+              </button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="payment-recipient">Recipient Name or Email</label>
+            <input type="text" id="payment-recipient" class="form-control" placeholder="e.g. elena.r@finmail.com" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="payment-amount">Amount (USD)</label>
+            <div class="input-with-icon">
+              <span class="input-icon" style="font-weight: 700; color: var(--text-primary);">$</span>
+              <input type="number" step="0.01" min="1" id="payment-amount" class="form-control" placeholder="0.00" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="payment-category">Payment Category</label>
+            <select id="payment-category" class="form-control">
+              <option value="Transfer">Peer-to-Peer Transfer</option>
+              <option value="Dining">Food & Dining</option>
+              <option value="Travel">Travel & Lodging</option>
+              <option value="Services">Services & Freelance</option>
+              <option value="Shopping">Shopping & Tech</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="payment-note">Memo / Reference Note</label>
+            <input type="text" id="payment-note" class="form-control" placeholder="e.g. Dinner split, Project payment">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-close-modal>Cancel</button>
+          <button type="submit" class="btn btn-primary">Review & Confirm →</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 2: 2-STEP PAYMENT CONFIRMATION (STEP 2) -->
+  <div class="modal-overlay" id="modal-confirm-payment">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title">🔒 Confirm Transaction</h3>
+        <button class="modal-close" data-close-modal>&times;</button>
+      </div>
+      <div class="modal-body">
+        <div id="confirm-payment-summary"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-close-modal>Cancel</button>
+        <button type="button" class="btn btn-success" id="btn-confirm-transfer">
+          Authorize & Send Money
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 3: DIGITAL PAYMENT RECEIPT (STEP 3) -->
+  <div class="modal-overlay" id="modal-receipt">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title">🧾 Transaction Receipt</h3>
+        <button class="modal-close" data-close-modal>&times;</button>
+      </div>
+      <div class="modal-body">
+        <div id="receipt-modal-content"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="window.print()">🖨️ Print Receipt</button>
+        <button type="button" class="btn btn-primary" data-close-modal>Done</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 4: REQUEST MONEY & QR GENERATION -->
+  <div class="modal-overlay" id="modal-request-qr">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title">📱 Receive Funds via QR Code</h3>
+        <button class="modal-close" data-close-modal>&times;</button>
+      </div>
+      <div class="modal-body" style="text-align: center;">
+        <p style="margin-bottom: 1.25rem;">Share this scannable QR code to receive payments instantly into your USD wallet.</p>
+
+        <!-- Canvas QR Render Target -->
+        <div style="display: flex; justify-content: center; margin: 1rem 0;">
+          <canvas id="request-qr-canvas" style="border-radius: var(--radius-md); box-shadow: var(--shadow-md); background: white; padding: 10px;"></canvas>
+        </div>
+
+        <div class="form-group" style="text-align: left; margin-top: 1rem;">
+          <label class="form-label" for="request-amount">Request Specific Amount (Optional)</label>
+          <input type="number" step="0.01" id="request-amount" class="form-control" placeholder="e.g. 50.00">
+        </div>
+
+        <div class="form-group" style="text-align: left;">
+          <label class="form-label" for="request-note">Note or Memo</label>
+          <input type="text" id="request-note" class="form-control" placeholder="e.g. Lunch with Alex">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="navigator.clipboard.writeText('fivpay.me/pay/alex.mercer'); window.app.showToast('Copied payment link to clipboard!', 'success');">
+          📋 Copy Payment Link
+        </button>
+        <button type="button" class="btn btn-primary" data-close-modal>Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 5: QR SCANNER INTERFACE -->
+  <div class="modal-overlay" id="modal-qr-scanner">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title">📷 Scan FivPay QR Code</h3>
+        <button class="modal-close" data-close-modal>&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="margin-bottom: 1rem; font-size: 0.85rem; color: var(--text-secondary);">
+          Point camera at a merchant or user QR code, or click "Simulate Scan" to test with mock payloads.
+        </p>
+
+        <!-- Interactive Scanner Viewport with Laser Reticle -->
+        <div class="scanner-viewport">
+          <video id="scanner-video" class="scanner-video" autoplay playsinline muted></video>
+          <div class="scanner-overlay">
+            <div class="scanner-target">
+              <div class="scanner-laser"></div>
+            </div>
+          </div>
+        </div>
+
+        <button type="button" class="btn btn-primary w-full" id="btn-simulate-qr-scan" style="padding: 0.75rem;">
+          ⚡ Simulate Successful QR Scan
+        </button>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-close-modal>Close Scanner</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 6: TOP UP WALLET -->
+  <div class="modal-overlay" id="modal-top-up">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title">➕ Instant Account Deposit</h3>
+        <button class="modal-close" data-close-modal>&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="margin-bottom: 1.25rem;">Choose a simulated quick deposit amount to top up your balance.</p>
+
+        <div class="grid-2" style="gap: 0.75rem; margin-bottom: 1.25rem;">
+          <button type="button" class="btn btn-secondary topup-quick-btn" data-amount="250">+$250 USD</button>
+          <button type="button" class="btn btn-secondary topup-quick-btn" data-amount="500">+$500 USD</button>
+          <button type="button" class="btn btn-secondary topup-quick-btn" data-amount="1000">+$1,000 USD</button>
+          <button type="button" class="btn btn-secondary topup-quick-btn" data-amount="5000">+$5,000 USD</button>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-close-modal>Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 7: ADD NEW BUDGET -->
+  <div class="modal-overlay" id="modal-add-budget">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title">📊 Add Monthly Budget</h3>
+        <button class="modal-close" data-close-modal>&times;</button>
+      </div>
+      <form id="form-add-budget">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" for="budget-category-name">Budget Category Name</label>
+            <input type="text" id="budget-category-name" class="form-control" placeholder="e.g. Fitness & Health" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="budget-limit-amount">Monthly Spending Limit ($)</label>
+            <input type="number" id="budget-limit-amount" class="form-control" placeholder="500" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="budget-color-picker">Accent Color</label>
+            <input type="color" id="budget-color-picker" class="form-control" value="#6366f1" style="height: 44px; padding: 4px;">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-close-modal>Cancel</button>
+          <button type="submit" class="btn btn-primary">Create Budget</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ====================================================================
+       5. JAVASCRIPT MODULES
+       ==================================================================== -->
+  <script src="js/mock-data.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/qr-engine.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/payments.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

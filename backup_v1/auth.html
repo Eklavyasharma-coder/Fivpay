@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FivPay - Next-Gen Fintech Authentication</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <style>
+    .auth-page {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      background: radial-gradient(circle at 15% 20%, rgba(99, 102, 241, 0.15) 0%, transparent 40%),
+                  radial-gradient(circle at 85% 80%, rgba(6, 182, 212, 0.12) 0%, transparent 40%),
+                  var(--bg-primary);
+    }
+    .auth-card {
+      width: 100%;
+      max-width: 480px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-xl);
+      padding: 2.25rem;
+      box-shadow: var(--shadow-xl);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+    .auth-tabs {
+      display: flex;
+      background: var(--bg-tertiary);
+      border-radius: var(--radius-md);
+      padding: 0.3rem;
+      margin: 1.5rem 0;
+    }
+    .auth-tab-btn {
+      flex: 1;
+      padding: 0.6rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+    .auth-tab-btn.active {
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      box-shadow: var(--shadow-sm);
+    }
+    .demo-login-box {
+      background: var(--bg-tertiary);
+      border: 1px dashed var(--border-hover);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      margin-top: 1.5rem;
+    }
+    .demo-role-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+    }
+  </style>
+</head>
+<body class="auth-page">
+  <div id="toast-container"></div>
+
+  <div class="auth-card">
+    <!-- Top Branding & Theme Toggle -->
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <div class="brand-icon">5</div>
+        <span style="font-size: 1.4rem; font-weight: 800; letter-spacing: -0.02em;">FivPay</span>
+      </div>
+      <button class="btn btn-secondary btn-icon sm" id="btn-auth-theme" title="Toggle Theme">
+        <span id="auth-theme-icon">☀️</span>
+      </button>
+    </div>
+
+    <div style="margin-top: 1.5rem;">
+      <h2 id="auth-title" style="font-weight: 800; font-size: 1.5rem;">Welcome to FivPay</h2>
+      <p id="auth-subtitle" style="font-size: 0.875rem; color: var(--text-secondary); margin-top: 0.25rem;">
+        Global banking, smart payments and instant compliance.
+      </p>
+    </div>
+
+    <!-- Auth Tabs (Login / Signup) -->
+    <div class="auth-tabs">
+      <button class="auth-tab-btn active" id="tab-login" onclick="showAuthTab('login')">Sign In</button>
+      <button class="auth-tab-btn" id="tab-signup" onclick="showAuthTab('signup')">Create Account</button>
+    </div>
+
+    <!-- LOGIN FORM -->
+    <form id="form-login">
+      <div class="form-group">
+        <label class="form-label" for="login-email">Email Address</label>
+        <div class="input-with-icon">
+          <span class="input-icon">✉️</span>
+          <input type="email" id="login-email" class="form-control" placeholder="name@domain.com" value="alex.mercer@fivpay.com" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="flex items-center justify-between">
+          <label class="form-label" for="login-password">Password</label>
+          <a href="#" style="font-size: 0.775rem;" onclick="alert('Demo mode: Enter any password or click Quick Login!')">Forgot password?</a>
+        </div>
+        <div class="input-with-icon">
+          <span class="input-icon">🔒</span>
+          <input type="password" id="login-password" class="form-control" placeholder="••••••••" value="demo1234" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="login-role">Sign in as Role</label>
+        <select id="login-role" class="form-control">
+          <option value="user">Personal User (Alex Mercer)</option>
+          <option value="staff">Compliance Staff (Sarah Jenkins)</option>
+          <option value="admin">Platform Administrator (Marcus Vance)</option>
+        </select>
+      </div>
+
+      <button type="submit" class="btn btn-primary w-full" style="padding: 0.8rem; font-size: 1rem; margin-top: 0.5rem;">
+        Sign In to Workspace →
+      </button>
+    </form>
+
+    <!-- SIGNUP FORM -->
+    <form id="form-signup" class="hidden">
+      <div class="form-group">
+        <label class="form-label" for="signup-name">Full Legal Name</label>
+        <div class="input-with-icon">
+          <span class="input-icon">👤</span>
+          <input type="text" id="signup-name" class="form-control" placeholder="e.g. Jordan Hayes" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="signup-email">Work or Personal Email</label>
+        <div class="input-with-icon">
+          <span class="input-icon">✉️</span>
+          <input type="email" id="signup-email" class="form-control" placeholder="jordan@fintech.io" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="signup-currency">Primary Wallet Currency</label>
+        <select id="signup-currency" class="form-control">
+          <option value="USD">USD - United States Dollar ($)</option>
+          <option value="EUR">EUR - Euro (€)</option>
+          <option value="GBP">GBP - British Pound (£)</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="signup-password">Create Security Password</label>
+        <div class="input-with-icon">
+          <span class="input-icon">🔒</span>
+          <input type="password" id="signup-password" class="form-control" placeholder="Min. 8 characters" required>
+        </div>
+      </div>
+
+      <button type="submit" class="btn btn-primary w-full" style="padding: 0.8rem; font-size: 1rem; margin-top: 0.5rem;">
+        Complete Registration →
+      </button>
+    </form>
+
+    <!-- 1-CLICK DEMO ACCESS BOX -->
+    <div class="demo-login-box">
+      <div class="flex items-center justify-between">
+        <span style="font-size: 0.775rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px;">
+          🚀 Quick Demo 1-Click Access
+        </span>
+        <span class="badge badge-info" style="font-size: 0.7rem;">Ready</span>
+      </div>
+      <div class="demo-role-grid">
+        <button type="button" class="btn btn-secondary btn-sm" onclick="demoLogin('user')">
+          👤 User
+        </button>
+        <button type="button" class="btn btn-secondary btn-sm" onclick="demoLogin('staff')">
+          🛡️ Staff
+        </button>
+        <button type="button" class="btn btn-secondary btn-sm" onclick="demoLogin('admin')">
+          ⚡ Admin
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/mock-data.js"></script>
+  <script src="js/auth.js"></script>
+  <script>
+    // Theme toggle in Auth page
+    const authThemeBtn = document.getElementById('btn-auth-theme');
+    const authThemeIcon = document.getElementById('auth-theme-icon');
+
+    function syncAuthTheme() {
+      const cur = localStorage.getItem('fivpay_theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', cur);
+      authThemeIcon.textContent = cur === 'light' ? '🌙' : '☀️';
+    }
+    syncAuthTheme();
+
+    authThemeBtn.addEventListener('click', () => {
+      const cur = document.documentElement.getAttribute('data-theme') || 'dark';
+      const next = cur === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('fivpay_theme', next);
+      authThemeIcon.textContent = next === 'light' ? '🌙' : '☀️';
+    });
+
+    // Tab switcher
+    function showAuthTab(tab) {
+      const loginForm = document.getElementById('form-login');
+      const signupForm = document.getElementById('form-signup');
+      const tabLogin = document.getElementById('tab-login');
+      const tabSignup = document.getElementById('tab-signup');
+      const title = document.getElementById('auth-title');
+      const subtitle = document.getElementById('auth-subtitle');
+
+      if (tab === 'login') {
+        loginForm.classList.remove('hidden');
+        signupForm.classList.add('hidden');
+        tabLogin.classList.add('active');
+        tabSignup.classList.remove('active');
+        title.textContent = 'Welcome to FivPay';
+        subtitle.textContent = 'Global banking, smart payments and instant compliance.';
+      } else {
+        loginForm.classList.add('hidden');
+        signupForm.classList.remove('hidden');
+        tabLogin.classList.remove('active');
+        tabSignup.classList.add('active');
+        title.textContent = 'Create your FivPay Account';
+        subtitle.textContent = 'Start sending, receiving and managing multi-currency funds in seconds.';
+      }
+    }
+
+    // 1-Click Demo Login
+    function demoLogin(role) {
+      window.authManager.quickDemoLogin(role);
+      window.location.href = 'index.html';
+    }
+
+    // Login Form Submit
+    document.getElementById('form-login').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = document.getElementById('login-email').value;
+      const pwd = document.getElementById('login-password').value;
+      const role = document.getElementById('login-role').value;
+
+      window.authManager.login(email, pwd, role);
+      window.location.href = 'index.html';
+    });
+
+    // Signup Form Submit
+    document.getElementById('form-signup').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = document.getElementById('signup-name').value;
+      const email = document.getElementById('signup-email').value;
+      const pwd = document.getElementById('signup-password').value;
+
+      window.authManager.signup(name, email, pwd, 'user');
+      window.location.href = 'index.html';
+    });
+  </script>
+</body>
+</html>

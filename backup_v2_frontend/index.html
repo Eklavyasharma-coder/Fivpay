@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FivPay - Institutional Digital Banking Platform</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+  <!-- Toast Alert Notifications Root -->
+  <div id="toast-container"></div>
+
+  <!-- Floating Developer / Sandbox HUD -->
+  <div class="sandbox-hud" title="Developer Workspace Switcher">
+    <span style="font-size: 0.725rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Sandbox Role:</span>
+    <button class="hud-pill active" data-role="user">User</button>
+    <button class="hud-pill" data-role="staff">Staff</button>
+    <button class="hud-pill" data-role="admin">Admin</button>
+  </div>
+
+  <div class="app-container">
+    <!-- ====================================================================
+         1. SIDEBAR NAVIGATION
+         ==================================================================== -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="#" class="brand-lockup">
+          <div class="brand-emblem">5</div>
+          <span>FivPay</span>
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-category">Core Workspaces</div>
+
+        <a href="#user-dashboard" class="nav-item active" data-view="user-dashboard">
+          <svg class="icon-svg" viewBox="0 0 24 24"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4z"/></svg>
+          <span>User Dashboard</span>
+        </a>
+
+        <a href="#staff-workspace" class="nav-item" data-view="staff-workspace">
+          <svg class="icon-svg" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+          <span>Staff Workspace</span>
+        </a>
+
+        <a href="#admin-dashboard" class="nav-item" data-view="admin-dashboard">
+          <svg class="icon-svg" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <span>Admin Console</span>
+        </a>
+
+        <div class="nav-category">Financial Management</div>
+
+        <a href="#transactions-budgets" class="nav-item" data-view="transactions-budgets">
+          <svg class="icon-svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          <span>Ledger & Budgets</span>
+        </a>
+
+        <a href="#analytics" class="nav-item" data-view="analytics">
+          <svg class="icon-svg" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          <span>Analytics & Reports</span>
+        </a>
+
+        <div class="nav-category">Quick Rails</div>
+
+        <a href="#" class="nav-item" onclick="window.app.openModal('modal-send-money')">
+          <svg class="icon-svg" viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+          <span>Send Transfer</span>
+        </a>
+
+        <a href="#" class="nav-item" onclick="window.app.openModal('modal-request-qr')">
+          <svg class="icon-svg" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          <span>Payment QR</span>
+        </a>
+
+        <a href="#" class="nav-item" onclick="window.app.openModal('modal-qr-scanner')">
+          <svg class="icon-svg" viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/></svg>
+          <span>Scan / UPI QR</span>
+        </a>
+
+        <a href="#settings" class="nav-item" data-view="settings">
+          <svg class="icon-svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          <span>Account Settings</span>
+        </a>
+      </nav>
+
+      <!-- Sidebar Bottom User Profile -->
+      <div class="sidebar-footer">
+        <div class="user-snippet">
+          <div class="user-avatar-circle" id="sidebar-user-avatar">AM</div>
+          <div class="user-meta-info">
+            <div class="user-meta-name" id="sidebar-user-name">Alex Mercer</div>
+            <div class="user-meta-role" id="sidebar-user-role">USER</div>
+          </div>
+          <button class="btn btn-ghost btn-icon" style="width: 28px; height: 28px;" title="Sign Out" onclick="window.authManager.logout()">
+            <svg class="icon-svg sm" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- ====================================================================
+         2. TOP BAR
+         ==================================================================== -->
+    <div class="main-wrapper">
+      <header class="topbar">
+        <div class="topbar-left">
+          <div class="breadcrumb-trail">
+            <span>FivPay /</span>
+            <strong id="topbar-breadcrumb">Personal Financial Space</strong>
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <!-- Live API Connectivity Indicator -->
+          <div id="api-health-badge" class="api-status-badge online" title="Flask REST API Status">
+            <span class="badge-dot"></span> Checking API...
+          </div>
+
+          <!-- Theme Toggle -->
+          <button class="btn btn-secondary btn-icon" id="btn-toggle-theme" title="Toggle Light / Dark Theme">
+            <span id="theme-toggle-icon-wrap">
+              <svg class="icon-svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+            </span>
+          </button>
+
+          <!-- Make Transfer Action -->
+          <button class="btn btn-primary btn-sm" onclick="window.app.openModal('modal-send-money')">
+            <svg class="icon-svg sm" viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+            <span>Transfer</span>
+          </button>
+
+          <a href="auth.html" class="btn btn-secondary btn-sm" title="Go to Auth Screen">
+            <span>Switch Account</span>
+          </a>
+        </div>
+      </header>
+
+      <!-- ====================================================================
+           3. MAIN PAGE WORKSPACE VIEWS
+           ==================================================================== -->
+      <main class="page-container">
+
+        <!-- VIEW A: USER DASHBOARD -->
+        <section id="view-user-dashboard" class="workspace-section active stagger-1">
+          <!-- Balance Overview Hero -->
+          <div class="balance-overview-hero">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="text-secondary" style="font-size: 0.825rem; font-weight: 500;">Total Available Net Balance</span>
+                <button class="btn btn-ghost btn-sm" id="btn-toggle-balance" style="padding: 2px;" title="Hide/Show Balance">
+                  <svg class="icon-svg sm" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                </button>
+              </div>
+
+              <div class="balance-headline tabular-nums" id="user-balance-amount">$24,850.75</div>
+
+              <div class="flex items-center gap-2" style="flex-wrap: wrap;">
+                <select class="form-control" id="currency-selector-btn" style="width: auto; padding: 0.35rem 0.65rem; font-size: 0.8rem; font-weight: 600;">
+                  <option value="USD">USD - United States Dollar ($)</option>
+                  <option value="EUR">EUR - Euro (€)</option>
+                  <option value="GBP">GBP - British Pound (£)</option>
+                </select>
+
+                <button class="btn btn-primary btn-sm" onclick="window.app.openModal('modal-send-money')">
+                  <svg class="icon-svg sm" viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+                  <span>Send Money</span>
+                </button>
+                <button class="btn btn-secondary btn-sm" onclick="window.app.openModal('modal-request-qr')">
+                  <svg class="icon-svg sm" viewBox="0 0 24 24"><line x1="17" y1="7" x2="7" y2="17"/><polyline points="17 17 7 17 7 7"/></svg>
+                  <span>Receive / QR</span>
+                </button>
+                <button class="btn btn-secondary btn-sm" id="btn-action-scan">
+                  <svg class="icon-svg sm" viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2"/><path d="M17 3h2a2 2 0 0 1 2 2v2"/><path d="M21 17v2a2 2 0 0 1-2 2h-2"/><path d="M7 21H5a2 2 0 0 1-2-2v-2"/></svg>
+                  <span>Scan QR</span>
+                </button>
+                <button class="btn btn-secondary btn-sm" onclick="window.app.openModal('modal-top-up')">
+                  <span>+ Top Up</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Virtual Cards Container -->
+            <div id="virtual-cards-container" style="display: flex; gap: 1rem; flex-wrap: wrap;"></div>
+          </div>
+
+          <!-- 3-Column Metrics Row -->
+          <div class="grid-3" style="margin-bottom: 1.5rem;">
+            <div class="card stat-card">
+              <div class="flex justify-between items-center">
+                <div class="stat-icon-wrapper emerald">
+                  <svg class="icon-svg" viewBox="0 0 24 24"><line x1="17" y1="7" x2="7" y2="17"/><polyline points="17 17 7 17 7 7"/></svg>
+                </div>
+                <span class="badge badge-emerald">+14.2% MoM</span>
+              </div>
+              <div class="stat-value tabular-nums text-success">$9,200.00</div>
+              <div class="text-secondary" style="font-size: 0.8rem;">Monthly Verified Inflow</div>
+            </div>
+
+            <div class="card stat-card">
+              <div class="flex justify-between items-center">
+                <div class="stat-icon-wrapper blue">
+                  <svg class="icon-svg" viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg>
+                </div>
+                <span class="badge badge-neutral">-4.8% MoM</span>
+              </div>
+              <div class="stat-value tabular-nums text-primary">$5,620.00</div>
+              <div class="text-secondary" style="font-size: 0.8rem;">Monthly Verified Outflow</div>
+            </div>
+
+            <div class="card stat-card">
+              <div class="flex justify-between items-center">
+                <div class="stat-icon-wrapper amber">
+                  <svg class="icon-svg" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                </div>
+                <span class="badge badge-emerald">Encrypted</span>
+              </div>
+              <div class="stat-value tabular-nums">100% Shielded</div>
+              <div class="text-secondary" style="font-size: 0.8rem;">Double-Entry Ledger Verified</div>
+            </div>
+          </div>
+
+          <!-- Charts 2-Column Row -->
+          <div class="grid-2" style="margin-bottom: 1.5rem;">
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <h3 class="card-title">Balance Growth Trajectory</h3>
+                  <div class="card-subtitle">Real-time asset appreciation</div>
+                </div>
+                <div class="flex gap-1">
+                  <button class="btn btn-secondary btn-sm" onclick="window.fivpayCharts.renderBalanceTrend('chart-balance-trend', '1W')">1W</button>
+                  <button class="btn btn-primary btn-sm" onclick="window.fivpayCharts.renderBalanceTrend('chart-balance-trend', '1M')">1M</button>
+                  <button class="btn btn-secondary btn-sm" onclick="window.fivpayCharts.renderBalanceTrend('chart-balance-trend', '6M')">6M</button>
+                </div>
+              </div>
+              <div class="chart-box">
+                <canvas id="chart-balance-trend"></canvas>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <h3 class="card-title">Monthly Expenditure Breakdown</h3>
+                  <div class="card-subtitle">Spending distribution by department/category</div>
+                </div>
+                <button class="btn btn-outline btn-sm" onclick="window.app.switchView('transactions-budgets')">
+                  Budgets →
+                </button>
+              </div>
+              <div class="chart-box">
+                <canvas id="chart-category-donut"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Activity Table -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">Settled Transactions</h3>
+                <div class="card-subtitle">Recent debits, credits and peer settlements</div>
+              </div>
+              <button class="btn btn-secondary btn-sm" onclick="window.app.switchView('transactions-budgets')">
+                View Ledger →
+              </button>
+            </div>
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Transaction</th>
+                    <th>Category</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="recent-transactions-list"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- VIEW B: STAFF EXPENSE WORKSPACE -->
+        <section id="view-staff-workspace" class="workspace-section stagger-1">
+          <div class="page-header-row">
+            <div>
+              <h1>Staff Corporate Expenses</h1>
+              <p>Submit company expense claims, track administrative approvals, and upload receipts.</p>
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="window.app.openModal('modal-submit-expense')">
+              <svg class="icon-svg sm" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              <span>File Expense Claim</span>
+            </button>
+          </div>
+
+          <!-- Summary Metric Cards -->
+          <div class="grid-3" style="margin-bottom: 1.5rem;">
+            <div class="card stat-card">
+              <div class="stat-icon-wrapper blue">
+                <svg class="icon-svg" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+              </div>
+              <div class="stat-value tabular-nums">$2,035.49</div>
+              <div class="text-secondary" style="font-size: 0.8rem;">Total Claimed (YTD)</div>
+            </div>
+
+            <div class="card stat-card">
+              <div class="stat-icon-wrapper emerald">
+                <svg class="icon-svg" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <div class="stat-value tabular-nums">$274.99</div>
+              <div class="text-secondary" style="font-size: 0.8rem;">Approved & Settled</div>
+            </div>
+
+            <div class="card stat-card">
+              <div class="stat-icon-wrapper amber">
+                <svg class="icon-svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+              </div>
+              <div class="stat-value tabular-nums">1 Pending</div>
+              <div class="text-secondary" style="font-size: 0.8rem;">Awaiting Admin Review</div>
+            </div>
+          </div>
+
+          <!-- Submitted Expenses Table -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">My Filed Expense Ledger</h3>
+            </div>
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Claim #</th>
+                    <th>Category & Purpose</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                    <th>Receipt</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="staff-expenses-table-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- VIEW C: ADMIN DASHBOARD -->
+        <section id="view-admin-dashboard" class="workspace-section stagger-1">
+          <div class="page-header-row">
+            <div>
+              <h1>Platform Master Administration</h1>
+              <p>Supervise user accounts, enforce security controls, approve staff expenses, and inspect audit logs.</p>
+            </div>
+            <span class="badge badge-blue">Restricted: Administrator Access</span>
+          </div>
+
+          <!-- Operational Metrics Grid -->
+          <div class="grid-4" style="margin-bottom: 1.5rem;">
+            <div class="card stat-card">
+              <div class="text-secondary" style="font-size: 0.75rem; text-transform: uppercase;">Gross Settlement Volume</div>
+              <div class="stat-value tabular-nums" id="admin-stat-volume">$42,891,420.00</div>
+              <div class="text-muted" style="font-size: 0.75rem;">All Historical Rails</div>
+            </div>
+
+            <div class="card stat-card">
+              <div class="text-secondary" style="font-size: 0.75rem; text-transform: uppercase;">Total Registered Users</div>
+              <div class="stat-value tabular-nums" id="admin-stat-users">14,892</div>
+              <div class="text-muted" style="font-size: 0.75rem;">Multi-role Accounts</div>
+            </div>
+
+            <div class="card stat-card">
+              <div class="text-secondary" style="font-size: 0.75rem; text-transform: uppercase;">Tier-1 Reserve Liquidity</div>
+              <div class="stat-value tabular-nums" id="admin-stat-reserve">$180,500,000.00</div>
+              <div class="text-muted" style="font-size: 0.75rem;">Guaranteed Balances</div>
+            </div>
+
+            <div class="card stat-card">
+              <div class="text-secondary" style="font-size: 0.75rem; text-transform: uppercase;">Pending Expense Claims</div>
+              <div class="stat-value tabular-nums text-accent" id="admin-stat-pending">1</div>
+              <div class="text-muted" style="font-size: 0.75rem;">Needs Immediate Review</div>
+            </div>
+          </div>
+
+          <!-- Expense Approval Queue -->
+          <div class="card" style="margin-bottom: 1.5rem;">
+            <div class="card-header">
+              <div>
+                <h3 class="card-title">Pending Staff Expense Approval Queue</h3>
+                <div class="card-subtitle">Authorize or reject business expenditures with audit logging</div>
+              </div>
+            </div>
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Claim #</th>
+                    <th>Staff Member</th>
+                    <th>Category</th>
+                    <th>Amount</th>
+                    <th>Description</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-expense-queue-body"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- User Management & Audit Log 2-Column Grid -->
+          <div class="grid-2">
+            <!-- User Table -->
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Network Accounts & Roles</h3>
+              </div>
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>User</th>
+                      <th>Role</th>
+                      <th>Balance</th>
+                      <th>Status</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="admin-users-table"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Audit Logs -->
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Security & Audit Event Stream</h3>
+              </div>
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Timestamp</th>
+                      <th>Action</th>
+                      <th>Resource</th>
+                      <th>IP</th>
+                    </tr>
+                  </thead>
+                  <tbody id="admin-audit-logs-body"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- VIEW D: TRANSACTIONS & BUDGETS -->
+        <section id="view-transactions-budgets" class="workspace-section stagger-1">
+          <div class="page-header-row">
+            <div>
+              <h1>Ledger & Spending Budgets</h1>
+              <p>Audit full double-entry transaction history, export CSV summaries, and manage monthly limits.</p>
+            </div>
+            <div class="flex gap-2">
+              <button class="btn btn-secondary btn-sm" id="btn-export-tx">
+                <svg class="icon-svg sm" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                <span>Export CSV</span>
+              </button>
+              <button class="btn btn-primary btn-sm" onclick="window.app.openModal('modal-add-budget')">
+                <svg class="icon-svg sm" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                <span>Add Budget</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Active Budgets Grid -->
+          <div class="card" style="margin-bottom: 1.5rem;">
+            <div class="card-header">
+              <h3 class="card-title">Monthly Budget Allocations</h3>
+            </div>
+            <div class="grid-3" id="budgets-grid-container" style="gap: 1.25rem;"></div>
+          </div>
+
+          <!-- Comprehensive Transactions Filter & Ledger -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Master Financial Ledger</h3>
+              <div class="flex gap-2" style="flex-wrap: wrap;">
+                <input type="text" id="tx-search-input" class="form-control" style="width: 220px; padding: 0.45rem 0.85rem;" placeholder="Search references or notes...">
+                <select id="tx-category-filter" class="form-control" style="width: 160px; padding: 0.45rem 0.85rem;">
+                  <option value="all">All Categories</option>
+                  <option value="Income">Income</option>
+                  <option value="Transfer">Transfer</option>
+                  <option value="Electronics">Electronics</option>
+                  <option value="Cloud Services">Cloud Services</option>
+                  <option value="Groceries">Groceries</option>
+                  <option value="Travel">Travel</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Transaction</th>
+                    <th>Counterparty</th>
+                    <th>Category</th>
+                    <th>Timestamp</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="full-transactions-table-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- VIEW E: CHARTS & ANALYTICS -->
+        <section id="view-analytics" class="workspace-section stagger-1">
+          <div class="page-header-row">
+            <div>
+              <h1>Financial Analytics & Cash Flow Engine</h1>
+              <p>Granular cash velocity, monthly inflow vs outflow comparisons, and portfolio trajectory.</p>
+            </div>
+            <button class="btn btn-secondary btn-sm" onclick="window.fivpayCharts.refreshAll()">
+              <span>Refresh Charts</span>
+            </button>
+          </div>
+
+          <div class="grid-2">
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <h3 class="card-title">Cash Flow: Monthly Inflow vs Outflow</h3>
+                  <div class="card-subtitle">Comparison in USD ($)</div>
+                </div>
+              </div>
+              <div class="chart-box">
+                <canvas id="chart-cash-flow"></canvas>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <h3 class="card-title">Portfolio Capital Growth</h3>
+                  <div class="card-subtitle">Historical asset accumulation curve</div>
+                </div>
+              </div>
+              <div class="chart-box">
+                <canvas id="chart-analytics-trend"></canvas>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- VIEW F: ACCOUNT SETTINGS & PROFILE -->
+        <section id="view-settings" class="workspace-section stagger-1">
+          <div class="page-header-row">
+            <div>
+              <h1>Account Settings & Security</h1>
+              <p>Manage personal credentials, verify account numbers, and inspect security parameters.</p>
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Profile Credentials</h3>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Full Name</label>
+                <input type="text" id="settings-name" class="form-control" readonly>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Verified Email Address</label>
+                <input type="email" id="settings-email" class="form-control" readonly>
+              </div>
+              <div class="form-group">
+                <label class="form-label">FivPay Account Number</label>
+                <input type="text" id="settings-acc" class="form-control tabular-nums" readonly>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Assigned Authorization Tier</label>
+                <input type="text" id="settings-role" class="form-control" readonly>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Security & Limits</h3>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Daily Transfer Limit</label>
+                <input type="text" class="form-control tabular-nums" value="$50,000.00 USD" readonly>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Two-Factor Authentication (2FA)</label>
+                <div class="flex items-center justify-between" style="padding: 0.5rem 0;">
+                  <span>Hardware & App Authenticator</span>
+                  <span class="badge badge-emerald">Enabled</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Password Protection</label>
+                <button class="btn btn-secondary btn-sm" onclick="alert('Demo environment: Passwords hashed with scrypt in backend.')">
+                  Update Password
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- ====================================================================
+       4. MODALS & DIALOGS
+       ==================================================================== -->
+
+  <!-- MODAL 1: SEND MONEY (STEP 1) -->
+  <div class="modal-overlay" id="modal-send-money">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title">Authorize Transfer</h3>
+        <button class="modal-close" data-close-modal>
+          <svg class="icon-svg" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <form id="form-send-money">
+        <div class="modal-body">
+          <div style="margin-bottom: 1.25rem;">
+            <div class="form-label" style="margin-bottom: 0.5rem;">Frequent Payees</div>
+            <div class="flex gap-2" style="flex-wrap: wrap;">
+              <button type="button" class="btn btn-secondary btn-sm" onclick="window.paymentsEngine.selectContact('Elena Rostova', 'elena.r@finmail.com')">
+                <span>Elena Rostova</span>
+              </button>
+              <button type="button" class="btn btn-secondary btn-sm" onclick="window.paymentsEngine.selectContact('Sarah Jenkins', 'sarah.compliance@fivpay.com')">
+                <span>Sarah (Staff)</span>
+              </button>
+              <button type="button" class="btn btn-secondary btn-sm" onclick="window.paymentsEngine.selectContact('Marcus Vance', 'marcus.admin@fivpay.com')">
+                <span>Marcus (Admin)</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="payment-recipient">Recipient Account Number or Email</label>
+            <input type="text" id="payment-recipient" class="form-control" placeholder="e.g. FP-1092-7482-11 or elena.r@finmail.com" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="payment-amount">Amount (USD)</label>
+            <div class="input-with-icon">
+              <span class="input-icon-left" style="font-weight: 700;">$</span>
+              <input type="number" step="0.01" min="1" id="payment-amount" class="form-control tabular-nums" placeholder="0.00" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="payment-category">Classification</label>
+            <select id="payment-category" class="form-control">
+              <option value="Transfer">Peer-to-Peer Transfer</option>
+              <option value="Dining">Food & Dining</option>
+              <option value="Travel">Travel & Lodging</option>
+              <option value="Services">Services & Contractors</option>
+              <option value="Electronics">Electronics & Hardware</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="payment-note">Memo / Reference</label>
+            <input type="text" id="payment-note" class="form-control" placeholder="Payment description">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-close-modal>Cancel</button>
+          <button type="submit" class="btn btn-primary">Review & Verify →</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 2: 2-STEP CONFIRMATION (STEP 2) -->
+  <div class="modal-overlay" id="modal-confirm-payment">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title">Verification Required</h3>
+        <button class="modal-close" data-close-modal>
+          <svg class="icon-svg" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div id="confirm-payment-summary"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-close-modal>Cancel</button>
+        <button type="button" class="btn btn-primary" id="btn-confirm-transfer">
+          Authorize & Settle Funds
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 3: DIGITAL RECEIPT (STEP 3) -->
+  <div class="modal-overlay" id="modal-receipt">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title">Settlement Receipt</h3>
+        <button class="modal-close" data-close-modal>
+          <svg class="icon-svg" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div id="receipt-modal-content"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="window.print()">Print Receipt</button>
+        <button type="button" class="btn btn-primary" data-close-modal>Done</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 4: REQUEST MONEY & QR GENERATION -->
+  <div class="modal-overlay" id="modal-request-qr">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title">Payment Request QR Code</h3>
+        <button class="modal-close" data-close-modal>
+          <svg class="icon-svg" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body" style="text-align: center;">
+        <p style="margin-bottom: 1rem; font-size: 0.85rem;">Scannable QR payload formatted with cryptographic reference.</p>
+        <div style="display: flex; justify-content: center; margin: 1rem 0;">
+          <canvas id="request-qr-canvas" style="border-radius: var(--radius-sm); border: 1px solid var(--border-subtle); background: white; padding: 10px;"></canvas>
+        </div>
+        <div class="form-group" style="text-align: left;">
+          <label class="form-label" for="request-amount">Specific Requested Amount ($ USD)</label>
+          <input type="number" step="0.01" id="request-amount" class="form-control tabular-nums" placeholder="e.g. 100.00">
+        </div>
+        <div class="form-group" style="text-align: left;">
+          <label class="form-label" for="request-note">Transaction Note</label>
+          <input type="text" id="request-note" class="form-control" placeholder="e.g. Invoice #102">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="navigator.clipboard.writeText('fivpay://pay?acc=FP-8829-4102-99'); window.app.showToast('Copied payment URI', 'success');">
+          Copy Payment URI
+        </button>
+        <button type="button" class="btn btn-primary" data-close-modal>Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 5: QR SCANNER & UPI DECODER -->
+  <div class="modal-overlay" id="modal-qr-scanner">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title">Scan QR / UPI Payload</h3>
+        <button class="modal-close" data-close-modal>
+          <svg class="icon-svg" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="scanner-box">
+          <video id="scanner-video" class="scanner-video-feed" autoplay playsinline muted></video>
+          <div class="scanner-reticle">
+            <div class="scanner-laser-bar"></div>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 1rem;">
+          <button type="button" class="btn btn-primary w-full" id="btn-simulate-qr-scan" style="padding: 0.65rem;">
+            Simulate Camera Detection
+          </button>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Or Paste QR / UPI String Manually</label>
+          <div class="flex gap-2">
+            <input type="text" id="manual-qr-input" class="form-control" placeholder="e.g. upi://pay?pa=merchant@okhdfcbank&am=150.00">
+            <button type="button" class="btn btn-secondary" id="btn-decode-manual-qr">Decode</button>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-close-modal>Close Scanner</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 6: STAFF SUBMIT EXPENSE -->
+  <div class="modal-overlay" id="modal-submit-expense">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title">File Corporate Business Expense</h3>
+        <button class="modal-close" data-close-modal>
+          <svg class="icon-svg" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <form id="form-submit-expense">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" for="expense-amount">Amount ($ USD)</label>
+            <input type="number" step="0.01" min="1" id="expense-amount" class="form-control tabular-nums" placeholder="0.00" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="expense-category">Expense Category</label>
+            <select id="expense-category" class="form-control" required>
+              <option value="Software Subscription">Software Subscription</option>
+              <option value="Client Relations">Client Relations & Dining</option>
+              <option value="Hardware & Office">Hardware & Workstation</option>
+              <option value="Travel & Conference">Travel & Conference</option>
+              <option value="Legal & Advisory">Legal & Advisory</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="expense-date">Expense Incurred Date</label>
+            <input type="date" id="expense-date" class="form-control" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="expense-desc">Business Purpose Description</label>
+            <textarea id="expense-desc" class="form-control" rows="3" placeholder="Provide detailed justification for administrative review..." required></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-close-modal>Cancel</button>
+          <button type="submit" class="btn btn-primary">Submit for Approval</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 7: ADD BUDGET -->
+  <div class="modal-overlay" id="modal-add-budget">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title">New Monthly Spending Budget</h3>
+        <button class="modal-close" data-close-modal>
+          <svg class="icon-svg" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <form id="form-add-budget">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" for="budget-category-name">Budget Category Name</label>
+            <input type="text" id="budget-category-name" class="form-control" placeholder="e.g. Cloud Infrastructure" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="budget-limit-amount">Monthly Allocation ($ USD)</label>
+            <input type="number" id="budget-limit-amount" class="form-control tabular-nums" placeholder="1000" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="budget-color-picker">Chart Accent Color</label>
+            <input type="color" id="budget-color-picker" class="form-control" value="#0D9488" style="height: 40px; padding: 2px;">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-close-modal>Cancel</button>
+          <button type="submit" class="btn btn-primary">Create Budget</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 8: TOP UP -->
+  <div class="modal-overlay" id="modal-top-up">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 class="modal-title">Simulate Account Top Up</h3>
+        <button class="modal-close" data-close-modal>
+          <svg class="icon-svg" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p style="margin-bottom: 1.25rem; font-size: 0.85rem;">Deposit test balance into your primary USD wallet account.</p>
+        <div class="grid-2" style="gap: 0.75rem;">
+          <button type="button" class="btn btn-secondary topup-quick-btn" data-amount="500">+$500 USD</button>
+          <button type="button" class="btn btn-secondary topup-quick-btn" data-amount="1000">+$1,000 USD</button>
+          <button type="button" class="btn btn-secondary topup-quick-btn" data-amount="2500">+$2,500 USD</button>
+          <button type="button" class="btn btn-secondary topup-quick-btn" data-amount="5000">+$5,000 USD</button>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-close-modal>Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT MODULES -->
+  <script src="js/icons.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/mock-data.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/qr-engine.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/payments.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

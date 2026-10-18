@@ -1,0 +1,25 @@
+# FivPay - Netlify Production Deployment Configuration
+[build]
+  publish = "frontend"
+
+# SPA Fallback Routing
+[[redirects]]
+  from = "/auth"
+  to = "/auth.html"
+  status = 200
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Strict Security Headers
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    X-XSS-Protection = "1; mode=block"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(self), microphone=(), geolocation=()"
+    Content-Security-Policy = "default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: http://localhost:5000 http://127.0.0.1:5000 https:; img-src 'self' data: blob: https:; font-src 'self' data: https:; connect-src 'self' http://localhost:5000 http://127.0.0.1:5000 https:;"
